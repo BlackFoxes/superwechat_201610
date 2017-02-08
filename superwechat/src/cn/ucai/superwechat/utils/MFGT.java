@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
+import cn.ucai.superwechat.ui.SplashActivity;
 
 /**
  * Created by clawpo on 2017/1/10.
@@ -35,4 +37,7 @@ public class MFGT {
         startActivity(activity, RegisterActivity.class);
     }
 
+    public static void gotoGuide(SplashActivity activity) {
+        startActivity(activity, GuideActivity.class);
+    }
 }
