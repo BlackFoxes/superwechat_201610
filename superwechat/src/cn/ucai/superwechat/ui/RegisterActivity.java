@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMError;
@@ -59,6 +60,8 @@ public class RegisterActivity extends BaseActivity {
     String usernick;
     String pwd;
     ProgressDialog pd;
+    @BindView(R.id.txt_title)
+    TextView mTxtTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class RegisterActivity extends BaseActivity {
         setContentView(R.layout.em_activity_register);
         ButterKnife.bind(this);
         mImgBack.setVisibility(View.VISIBLE);
+        mTxtTitle.setVisibility(View.VISIBLE);
+        mTxtTitle.setText(R.string.register);
     }
 
     public void register() {
@@ -105,26 +110,26 @@ public class RegisterActivity extends BaseActivity {
         NetDao.register(this, username, usernick, pwd, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
-                L.e(TAG,"register,s="+s);
-                if (s!=null){
+                L.e(TAG, "register,s=" + s);
+                if (s != null) {
                     Result result = ResultUtils.getResultFromJson(s, null);
-                    if (result!=null){
-                        if (result.isRetMsg()){
+                    if (result != null) {
+                        if (result.isRetMsg()) {
                             //注册成功后调用环信的注册
                             registerEMServer();
-                        }else{
+                        } else {
                             pd.dismiss();
-                            if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS){
+                            if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
                                 CommonUtils.showShortToast(R.string.User_already_exists);
-                            }else{
+                            } else {
                                 CommonUtils.showShortToast(R.string.Registration_failed);
                             }
                         }
-                    }else{
+                    } else {
                         pd.dismiss();
                         CommonUtils.showShortToast(R.string.Registration_failed);
                     }
-                }else{
+                } else {
                     pd.dismiss();
                     CommonUtils.showShortToast(R.string.Registration_failed);
                 }
@@ -134,7 +139,7 @@ public class RegisterActivity extends BaseActivity {
             public void onError(String error) {
                 pd.dismiss();
                 CommonUtils.showShortToast(R.string.Registration_failed);
-                L.e(TAG,"error="+error);
+                L.e(TAG, "error=" + error);
             }
         });
     }
@@ -185,12 +190,12 @@ public class RegisterActivity extends BaseActivity {
         NetDao.unRegister(this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
-                L.e(TAG,"result="+result);
+                L.e(TAG, "result=" + result);
             }
 
             @Override
             public void onError(String error) {
-                L.e(TAG,"error="+error);
+                L.e(TAG, "error=" + error);
             }
         });
     }
