@@ -1,18 +1,27 @@
 package cn.ucai.superwechat.parse;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperWeChatHelper;
-import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
-import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
+import cn.ucai.superwechat.domain.Result;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 public class UserProfileManager {
+	private static final String TAG = UserProfileManager.class.getSimpleName();
 
 	/**
 	 * application context
@@ -140,20 +149,42 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 
-	public void asyncGetCurrentUserInfo() {
+	public void asyncGetCurrentUserInfo(Activity activity) {
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
 
 			@Override
 			public void onSuccess(EaseUser value) {
+				L.e(TAG,"asyncGetCurrentUserInfo,value="+value);
 			    if(value != null){
-    				setCurrentUserNick(value.getNick());
-    				setCurrentUserAvatar(value.getAvatar());
+//    				setCurrentUserNick(value.getNick());
+//    				setCurrentUserAvatar(value.getAvatar());
 			    }
 			}
 
 			@Override
 			public void onError(int error, String errorMsg) {
 
+			}
+		});
+		L.e("UserProfileManager","asyncGetCurrentUserInfo,username="+EMClient.getInstance().getCurrentUser());
+		NetDao.getUserInfoByUsername(activity, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String s) {
+				L.e("UserProfileManager","s="+s);
+				if (s!=null){
+					Result result = ResultUtils.getResultFromJson(s, User.class);
+					if (result!=null && result.isRetMsg()){
+						User user = (User) result.getRetData();
+						//save user info to db
+						setCurrentUserNick(user.getMUserNick());
+//						setCurrentUserAvatar(value.getAvatar());
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				L.e("UserProfileManager","error="+error);
 			}
 		});
 
