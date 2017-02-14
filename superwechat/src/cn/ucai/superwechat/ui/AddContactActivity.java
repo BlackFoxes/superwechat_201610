@@ -84,10 +84,6 @@ public class AddContactActivity extends BaseActivity{
 			searchedUserLayout.setVisibility(View.GONE);
 
 			searchAppUser(name);
-			// TODO you can search the user from your app server here.
-			
-			//show the userame and add button if user exist
-
 		} 
 	}
 
