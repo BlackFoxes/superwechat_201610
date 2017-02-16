@@ -1,7 +1,6 @@
 package com.hyphenate.easeui.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -90,7 +89,6 @@ public class EaseUserUtils {
     }
 
     public static void setAppUserAvatarByPath(Context context,String path,ImageView imageView){
-        Log.e(TAG,"setAppUserAvatarByPath,path="+path);
         if(path != null){
             try {
                 int avatarResId = Integer.parseInt(path);
